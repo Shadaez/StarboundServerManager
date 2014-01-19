@@ -1,14 +1,14 @@
 var express = require('express'),
 	path = require("path"),
 	app = express().use(express.static(path.join(__dirname, "public")));
-	server = require('http').createServer(app),
-	io = require('socket.io').listen(server),
-	fs = require('fs'),
-	config = require('./config.json'),
-	events = require('events'),
-	eventEmitter = new events.EventEmitter(),
-	exec = require('child_process').exec;
-	
+server = require('http').createServer(app),
+io = require('socket.io').listen(server),
+fs = require('fs'),
+config = require('./config.json'),
+events = require('events'),
+eventEmitter = new events.EventEmitter(),
+exec = require('child_process').exec;
+
 server.listen(3000);
 
 app.get("/");
@@ -20,45 +20,43 @@ var regexp = {
 	tests: function(line) {
 		if (global.running !== "up") {
 			if (this.server.test(line)) {
-				var test = line.match(this.client)
 				console.log("Server's Up!")
 				io.sockets.emit("running", "up");
 				global.running = "up";
 			}
 		}
 		if (this.chat.test(line)) {
-
 			var test = line.match(this.chat);
 			var data = {
 				user: test[1],
 				message: test[2]
 			};
 			io.sockets.emit('chat', data);
-			global.chat.push("<" + test[1] + "> " + test[2]);
-			if (global.chat.length > global.logLength) {
-				global.chat.shift();
+			global.chatLog.push(data);
+			if (global.chatLog.length > global.logLength) {
+				global.chatLog.shift();
 			}
 
-			console.log("<" + test[1] + "> " + test[2]);
+			console.log("<" + data.user + "> " + data.message);
 
 			//add line to chat log, emit to sockets
-		} else if (this.worlds.test(line)) {
-			var test = line.match(this.worlds);
+		} else if (this.world.test(line)) {
+			var test = line.match(this.world);
 
 			var data = {
 				type: test[1],
 				world: test[3]
 			};
 			io.sockets.emit("world", data);
-			if (test[1] === "Shutting down") {
-				global.worlds.splice(global.clients.indexOf(test[3]), 1);
-			} else if (test[1] === "Loading") {
-				global.worlds.push(test[3]);
+			if (data.type === "Shutting down") {
+				global.worlds.splice(global.worlds.indexOf(data.world), 1);
+			} else if (data.type === "Loading") {
+				global.worlds.push(data.world);
 			}
-			console.log(test[1] + " world " + test[3] + ".");
+			console.log(data.type + " world " + data.world + ".");
 			//check if world is loading or unloading, and add or remove them from list, emit to sockets
-		} else if (this.client.test(line)) {
-			var test = line.match(this.client);
+		} else if (this.user.test(line)) {
+			var test = line.match(this.user);
 
 			var data = {
 				name: test[1],
@@ -66,18 +64,24 @@ var regexp = {
 				type: test[3]
 			};
 
-			if (test[3] === "disconnected") {
-				global.clients.splice(global.clients.indexOf(test[1]), 1);
+			if (data.type === "disconnected") {
+				global.users.splice(global.users.indexOf({
+					name: data.name,
+					ip: data.ip
+				}), 1);
 			} else {
-				global.clients.push(test[1]);
+				global.users.push({
+					name: data.name,
+					ip: data.ip
+				});
 			}
-			io.sockets.emit("client", data)
-			console.log("Client " + test[1] + " " + test[3] + ".");
+			io.sockets.emit("user", data)
+			console.log("Client " + data.name + " " + data.type + ".");
 			//check if they disconnect or connect, and then add or remove them from list, emit to sockets
 		} //convert to a foreach or something
 	},
-	client: /^Info:\s+Client '(.*)' <\d> \((\d*.\d.\d.\d):\d*\) ((dis)?connected)/,
-	worlds: /^Info:\s+(Loading|Shutting down)\s?(world db for)?\sworld\s([:?\-?\w]+)/,
+	user: /^Info:\s+Client '(.*)' <\d> \((\d*.\d.\d.\d):\d*\) ((dis)?connected)/,
+	world: /^Info:\s+(Loading|Shutting down)\s?(world db for)?\sworld\s([:?\-?\w]+)/,
 	chat: /^Info:\s+<(.*)>\s(.*)/,
 	server: /^Info:\s+bind.*/
 }
@@ -91,15 +95,15 @@ starbound_server.stdout.on('data', function(data) {
 io.sockets.on('connection', function(socket) {
 	socket.emit('init', global);
 	socket.on('exec', function(data) {
-		if(authenticate(data.password)) {
-			if((data.type === "stop" || data.type === "restart") && global.running !== "down"){
+		if (authenticate(data.password)) {
+			if ((data.type === "stop" || data.type === "restart") && global.running !== "down") {
 				io.sockets.emit("running", "down");
 				//kill process
 				starbound_server.exit();
 				//reinitiate globals
 				global = initGlobal
 			}
-			if((data.type === "start" || data.type === "restart") && global.running === "down"){
+			if ((data.type === "start" || data.type === "restart") && global.running === "down") {
 				//start process
 				io.sockets.emit("running", "starting");
 				global.running = "starting";
@@ -118,9 +122,9 @@ function authenticate(password) {
 function initGlobal() {
 	var global = {
 		running: "down",
-		clients: [],
+		users: [],
 		worlds: [],
-		chat: [],
+		chatLog: [],
 		logLength: 50
 	};
 	io.sockets.emit('init', global)

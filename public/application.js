@@ -2,31 +2,37 @@
 var socket = io.connect('http://localhost');
 var global = {};
 
+function StarboundCtrl($scope) {
+	$scope.chatLog = getModel("chatLog");
+	$scope.users = getModel("users");
+	$scope.worlds = getModel("worlds");
+}
+
 socket.on('init', function(data){
 	global = data;
 });
 
 socket.on('world', function(data){
 	if (data.type === "Shutting down") {
-		global.worlds.splice(global.clients.indexOf(data.world), 1);
+		global.worlds.splice(global.worlds.indexOf(data.world), 1);
 	} else if (data.type === "Loading") {
 		global.worlds.push(data.world);
 	}
 	console.log(data);
 });
 
-socket.on('client', function(data){
+socket.on('user', function(data){
 	if (data.type === "disconnected") {
-		global.clients.splice(global.clients.indexOf(data.name), 1);
+		global.users.splice(global.users.indexOf(data.name), 1);
 	} else {
-		global.clients.push(data.name);
+		global.users.push(data.name);
 	}
 });
 
 socket.on('chat', function(data){
-	global.chat.push("<" + data.name + "> " + data.message);
-	if (global.chat.length > global.logLength) {
-		global.chat.shift();
+	global.chatLog.push("<" + data.name + "> " + data.message);
+	if (global.chatLog.length > global.logLength) {
+		global.chatLog.shift();
 	}
 	console.log(data);
 });
@@ -35,3 +41,7 @@ socket.on('running', function(data){
 	global.running = data;
 	status(data);
 });
+
+function getModel(model){
+	return global[model];
+}
