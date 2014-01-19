@@ -1,31 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html ng-app>
   <head>
     <title>Starbound Server Manager</title>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src ="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+    <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"
     <script src="/socket.io/socket.io.js"></script>
     <script src="/application.js"></script>
     <link rel="stylesheet" href="/styles.css" type="text/css"/>
   </head>
-  <body>
+  <body ng-controller="StarboundCtrl">
     <div id="Header">
-      <div id="Status">Status: <i>unknown</i>.</div>
+      <div id="Status-{{status}}">{{status}}.</div>
     </div>
   	<div id="PlayerList">
       <ul>
+        <li ng-repeat= "user in users">
+          {{user}}
+        </li>
       </ul>
   	</div>
     <div id="Worlds">
       <ul>
+        <li ng-repeat= "world in Worlds">
+          {{world}}
+        </li>
       </ul>
     </div>
-    <div id="Chat">
+    <div id="Chat" >
+      <ul>
+        <li ng-repeat="chat in chatLog">
+          &lt;{{chat.user}}&gt; {{chat.message}}
+        </li>
+      <ul>
     </div>
     <div id="Controls">
-      <form>
-        <!-- password, stop start reset -->
+      <form type = "text">
+        <input type="text" ng-model="rconPassword"  size="30" placeholder="add new todo here">
+      </form>
     </div>
   </body>
 </html>

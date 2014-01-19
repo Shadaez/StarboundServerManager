@@ -90,27 +90,41 @@ starbound_server.stdout.on('data', function(data) {
 //socket.io
 io.sockets.on('connection', function(socket) {
 	socket.emit('init', global);
-	socket.on('restart', function(password) {
-		if (config.password.indexOf(password) > -1) {
-			io.sockets.emit("running", "starting");
-			//kill process
-			starbound_server.exit();
-			//reinitiate globals
-			global = initGlobal
-			//start process
-			starbound_server = startServer();
+	socket.on('exec', function(data) {
+		if(authenticate(data.password)) {
+			if((data.type === "stop" || data.type === "restart") && global.running !== "down"){
+				io.sockets.emit("running", "down");
+				//kill process
+				starbound_server.exit();
+				//reinitiate globals
+				global = initGlobal
+			}
+			if((data.type === "start" || data.type === "restart") && global.running === "down"){
+				//start process
+				io.sockets.emit("running", "starting");
+				global.running = "starting";
+				starbound_server = startServer();
+			}
+		} else {
+			io.socket.emit("wrongPassword", true);
 		}
 	});
 });
 
+function authenticate(password) {
+	return config.password.indexOf(password) != -1;
+}
+
 function initGlobal() {
-	return {
-		running: "starting",
+	var global = {
+		running: "down",
 		clients: [],
 		worlds: [],
 		chat: [],
 		logLength: 50
 	};
+	io.sockets.emit('init', global)
+	return global;
 };
 
 function startServer() {

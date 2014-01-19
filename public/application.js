@@ -1,9 +1,11 @@
 //lets add angular
 var socket = io.connect('http://localhost');
 var global = {};
+
 socket.on('init', function(data){
-	global = data; //we should refresh everything when we get this
+	global = data;
 });
+
 socket.on('world', function(data){
 	if (data.type === "Shutting down") {
 		global.worlds.splice(global.clients.indexOf(data.world), 1);
@@ -33,26 +35,3 @@ socket.on('running', function(data){
 	global.running = data;
 	status(data);
 });
-
-$(ready);
-
-function ready(){
-	status(global.running);
-};
-
-//changes status depending on the value entered
-function status(status){
-	if(status === undefined){
-		status = "unknown";
-	}
-	var options = {
-		"unknown": {text: "unknown", color: "grey"},
-		"up": {text: "up", color: "green"},
-		"down": {text: "down", color: "red"},
-		"starting": {text: "starting", color: "yellow"}
-	};
-	var properties = options[status];
-	var $Status = $('#Status').find('i');
-	$Status.text(properties.text);
-	$Status.css("color", properties.color);
-};
