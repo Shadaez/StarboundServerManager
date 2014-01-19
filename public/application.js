@@ -37,8 +37,8 @@ socket.on('chat', function(data){
 	console.log(data);
 });
 
-socket.on('running', function(data){
-	global.running = data;
+socket.on('status', function(data){
+	global.status = data;
 	status(data);
 });
 

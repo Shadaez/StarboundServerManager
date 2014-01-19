@@ -18,11 +18,11 @@ var starbound_server = startServer();
 var regexp = {
 	//runs a match on the line on all the regexps (except server, that only needs to run when the servers being started) and broadcasts to all sockets.
 	tests: function(line) {
-		if (global.running !== "up") {
+		if (global.status !== "up") {
 			if (this.server.test(line)) {
 				console.log("Server's Up!")
-				io.sockets.emit("running", "up");
-				global.running = "up";
+				io.sockets.emit("status", "up");
+				global.status = "up";
 			}
 		}
 		if (this.chat.test(line)) {
@@ -96,17 +96,17 @@ io.sockets.on('connection', function(socket) {
 	socket.emit('init', global);
 	socket.on('exec', function(data) {
 		if (authenticate(data.password)) {
-			if ((data.type === "stop" || data.type === "restart") && global.running !== "down") {
-				io.sockets.emit("running", "down");
+			if ((data.type === "stop" || data.type === "restart") && global.status !== "down") {
+				io.sockets.emit("status", "down");
 				//kill process
 				starbound_server.exit();
 				//reinitiate globals
 				global = initGlobal
 			}
-			if ((data.type === "start" || data.type === "restart") && global.running === "down") {
+			if ((data.type === "start" || data.type === "restart") && global.status === "down") {
 				//start process
-				io.sockets.emit("running", "starting");
-				global.running = "starting";
+				io.sockets.emit("status", "starting");
+				global.status = "starting";
 				starbound_server = startServer();
 			}
 		} else {
@@ -121,7 +121,7 @@ function authenticate(password) {
 
 function initGlobal() {
 	var global = {
-		running: "down",
+		status: "down",
 		users: [],
 		worlds: [],
 		chatLog: [],
