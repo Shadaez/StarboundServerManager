@@ -18,12 +18,12 @@ var starbound_server = startServer();
 var regexp = {
 	//runs a match on the line on all the regexps (except server, that only needs to run when the servers being started) and broadcasts to all sockets.
 	tests: function(line) {
-		if (!global.running) {
+		if (global.running !== "up") {
 			if (this.server.test(line)) {
 				var test = line.match(this.client)
 				console.log("Server's Up!")
-				io.sockets.emit("running", true);
-				global.running = true;
+				io.sockets.emit("running", "up");
+				global.running = "up";
 			}
 		}
 		if (this.chat.test(line)) {
@@ -92,7 +92,7 @@ io.sockets.on('connection', function(socket) {
 	socket.emit('init', global);
 	socket.on('restart', function(password) {
 		if (config.password.indexOf(password) > -1) {
-			io.sockets.emit("running", false);
+			io.sockets.emit("running", "starting");
 			//kill process
 			starbound_server.exit();
 			//reinitiate globals
@@ -105,7 +105,7 @@ io.sockets.on('connection', function(socket) {
 
 function initGlobal() {
 	return {
-		running: false,
+		running: "starting",
 		clients: [],
 		worlds: [],
 		chat: [],
