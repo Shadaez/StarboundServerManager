@@ -1,15 +1,13 @@
 var express = require('express'),
 	path = require("path"),
-	app = express().use(express.static(path.join(__dirname, "public")));
-server = require('http').createServer(app),
-io = require('socket.io').listen(server),
-fs = require('fs'),
-os = require('os'),
-config = require('./config.json'),
-events = require('events'),
-eventEmitter = new events.EventEmitter(),
-exec = require('child_process').exec,
-sbConfig = JSON.parse(fs.readFileSync(config.path + "starbound.config"));
+	app = express().use(express.static(path.join(__dirname, "public"))),
+	server = require('http').createServer(app),
+	io = require('socket.io').listen(server),
+	fs = require('fs'),
+	os = require('os'),
+	config = require('./config.json'),
+	exec = require('child_process').exec,
+	sbConfig = JSON.parse(fs.readFileSync(config.path + "starbound.config"));
 
 server.listen(3000);
 
@@ -142,12 +140,12 @@ function startServer() {
 	});
 };
 
-function platform(){
+function platform() {
 	var platform = os.platform(),
 		arch = os.arch();
-	if(platform === "win32"){
+	if (platform === "win32") {
 		return "win32/starbound_server.exe";
-	} else if(arch === "x64"){
+	} else if (arch === "x64") {
 		return "linux64/starbound_server"
 	} else {
 		return "linux32/starbound_server"
