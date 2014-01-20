@@ -1,47 +1,55 @@
-//lets add angular
 var socket = io.connect('http://localhost');
-var global = {};
 
 function StarboundCtrl($scope) {
-	$scope.chatLog = getModel("chatLog");
-	$scope.users = getModel("users");
-	$scope.worlds = getModel("worlds");
+	$scope.chatLog = [],
+	$scope.users = [],
+	$scope.worlds = [],
+	$scope.status = ''
 }
 
 socket.on('init', function(data){
-	global = data;
+	angular.element("body").scope().$apply(function(scope){
+		scope.chatLog = data.chatLog;
+		scope.users = data.users;
+		scope.worlds = data.worlds;
+		scope.status = data.status;
+	});
 });
 
 socket.on('world', function(data){
-	if (data.type === "Shutting down") {
-		global.worlds.splice(global.worlds.indexOf(data.world), 1);
-	} else if (data.type === "Loading") {
-		global.worlds.push(data.world);
-	}
-	console.log(data);
+	angular.element("body").scope().$apply(function(scope){
+		if (data.type === "Shutting down") {
+			scope.worlds.splice(scope.worlds.indexOf(data.world), 1);
+		} else if (data.type === "Loading") {
+			scope.worlds.push(data.world);
+		}
+		console.log(data);
+	});
 });
 
 socket.on('user', function(data){
-	if (data.type === "disconnected") {
-		global.users.splice(global.users.indexOf(data.name), 1);
-	} else {
-		global.users.push(data.name);
-	}
+	angular.element("body").scope().$apply(function(scope){
+		if (data.type === "disconnected") {
+			scope.users.splice(scope.users.indexOf(data.name), 1);
+		} else {
+			scope.users.push(data.name);
+		}
+	});
 });
 
 socket.on('chat', function(data){
-	global.chatLog.push("<" + data.name + "> " + data.message);
-	if (global.chatLog.length > global.logLength) {
-		global.chatLog.shift();
-	}
-	console.log(data);
+	angular.element("body").scope().$apply(function(scope){
+		scope.chatLog.push(data);
+		if (scope.chatLog.length > scope.logLength) {
+			scope.chatLog.shift();
+		}
+		console.log(data);
+	});
 });
 
 socket.on('status', function(data){
-	global.status = data;
-	status(data);
+	angular.element("body").scope().$apply(function(scope){
+		scope.status = data;
+		status(data);
+	});
 });
-
-function getModel(model){
-	return global[model];
-}
