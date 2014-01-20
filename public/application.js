@@ -30,9 +30,9 @@ socket.on('world', function(data){
 socket.on('user', function(data){
 	angular.element("body").scope().$apply(function(scope){
 		if (data.type === "disconnected") {
-			scope.users.splice(scope.users.indexOf(data.name), 1);
+			scope.users.splice(scope.users.indexOf(data), 1);
 		} else {
-			scope.users.push(data.name);
+			scope.users.push(data);
 		}
 	});
 });

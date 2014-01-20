@@ -4,10 +4,12 @@ var express = require('express'),
 server = require('http').createServer(app),
 io = require('socket.io').listen(server),
 fs = require('fs'),
+os = require('os'),
 config = require('./config.json'),
 events = require('events'),
 eventEmitter = new events.EventEmitter(),
-exec = require('child_process').exec;
+exec = require('child_process').exec,
+sbConfig = JSON.parse(fs.readFileSync(config.path + "starbound.config"));
 
 server.listen(3000);
 
@@ -80,7 +82,7 @@ var regexp = {
 			//check if they disconnect or connect, and then add or remove them from list, emit to sockets
 		} //convert to a foreach or something
 	},
-	user: /^Info:\s+Client '(.*)' <\d> \((\d*.\d.\d.\d):\d*\) ((dis)?connected)/,
+	user: /^Info:\s+Client '(.*)' <\d> \((\d+.\d+.\d+.\d+):\d+\) ((dis)?connected)/,
 	world: /^Info:\s+(Loading|Shutting down)\s?(world db for)?\sworld\s([:?\-?\w]+)/,
 	chat: /^Info:\s+<(.*)>\s(.*)/,
 	server: /^Info:\s+bind.*/
@@ -105,8 +107,6 @@ io.sockets.on('connection', function(socket) {
 			}
 			if ((data.type === "start" || data.type === "restart") && global.status === "down") {
 				//start process
-				io.sockets.emit("status", "starting");
-				global.status = "starting";
 				starbound_server = startServer();
 			}
 		} else {
@@ -125,16 +125,31 @@ function initGlobal() {
 		users: [],
 		worlds: [],
 		chatLog: [],
-		logLength: 50
+		logLength: 50,
+		serverName: sbConfig.serverName
 	};
 	io.sockets.emit('init', global)
 	return global;
 };
 
 function startServer() {
-	return exec(config.pathToExe + "starbound_server.exe", function(error, stdout, stderr) {
+	io.sockets.emit("status", "starting");
+	global.status = "starting";
+	return exec(config.path + platform(), function(error, stdout, stderr) {
 		if (error !== null) {
 			console.log('exec error: ' + error);
 		}
 	});
 };
+
+function platform(){
+	var platform = os.platform(),
+		arch = os.arch();
+	if(platform === "win32"){
+		return "win32/starbound_server.exe";
+	} else if(arch === "x64"){
+		return "linux64/starbound_server"
+	} else {
+		return "linux32/starbound_server"
+	}
+}

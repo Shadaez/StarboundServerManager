@@ -10,34 +10,37 @@
     <link rel="stylesheet" href="/styles.css" type="text/css"/>
   </head>
   <body ng-controller="StarboundCtrl">
-    <div id="Header">
-      <div> Server is <i id="Status-{{status}}">{{status}}</i>.</div>
-    </div>
-  	<div id="PlayerList">
+    <section id="PlayerList">
+      <h4>Online Players<h/4>
       <ul>
         <li ng-repeat= "user in users" title="ip: {{user.ip}}">
           {{user.name}}
         </li>
       </ul>
-  	</div>
-    <div id="Worlds">
+    </section>
+    <section id="Worlds">
+      <h4>Active Worlds</h4>
       <ul>
         <li ng-repeat= "world in worlds">
           {{world}}
         </li>
       </ul>
-    </div>
-    <div id="Chat" >
+    </section>
+    <header id="Header">
+      <h2> {{serverName}} </h2>
+      <h5> Server is <i id="Status-{{status}}">{{status}}</i>.</h5>
+    </header>
+    <section id="Chat">
       <ul>
         <li ng-repeat="chat in chatLog">
           &lt;{{chat.user}}&gt; {{chat.message}}
         </li>
       <ul>
-    </div>
-    <div id="Controls">
+    </section>
+    <section id="Controls">
       <form type = "text">
         <input type="text" ng-model="rconPassword"  size="30" placeholder="Enter RCon Password">
       </form>
-    </div>
+    </section>
   </body>
 </html>

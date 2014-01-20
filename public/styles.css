@@ -1,3 +1,8 @@
+html, body{
+	margin:0;
+	padding:0;
+}
+
 #Status-up, #Status-up, #Status-up{
 	font-weight: bold;
 	font-style: normal;
@@ -6,13 +11,44 @@
 	color: green;
 }
 #Status-down{
-	color: green;
+	color: red;
 }
 #Status-starting{
-	color: green;
+	color: yellow;
 }
-
+header, section{
+	display: block;
+}
 #PlayerList li, #Chat li, #Worlds li{
 	display: block;
 	height: 1em;
+}
+#Chat, #Controls, #Header, #PlayerList, #Worlds{
+	position: absolute;
+}
+#Chat, #Controls, #Header{
+	left: 200px;
+	right: 0px;
+}
+#PlayerList, #Worlds{
+	width: 200px;
+}
+#Header{
+	height:60px;
+	top:0px
+}
+#PlayerList{
+	top:0px;
+	bottom: 200px;
+}
+#Worlds{
+	height: 200px;
+	bottom: 0px;
+}
+#Chat{
+	top:60px;
+	bottom:5px;
+}
+#Controls{
+	bottom:0px;
 }
