@@ -11,12 +11,12 @@
   </head>
   <body ng-controller="StarboundCtrl">
     <div id="Header">
-      <div id="Status-{{status}}">{{status}}.</div>
+      <div> Server is <i id="Status-{{status}}">{{status}}</i>.</div>
     </div>
   	<div id="PlayerList">
       <ul>
-        <li ng-repeat= "user in users">
-          {{user}}
+        <li ng-repeat= "user in users" title="ip: {{user.ip}}">
+          {{user.name}}
         </li>
       </ul>
   	</div>

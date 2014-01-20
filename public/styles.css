@@ -1,5 +1,18 @@
-#Status > i{
+#Status-up, #Status-up, #Status-up{
 	font-weight: bold;
 	font-style: normal;
-	color: grey;
+}
+#Status-up{
+	color: green;
+}
+#Status-down{
+	color: green;
+}
+#Status-starting{
+	color: green;
+}
+
+#PlayerList li, #Chat li, #Worlds li{
+	display: block;
+	height: 1em;
 }
