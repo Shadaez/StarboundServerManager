@@ -64,3 +64,9 @@ socket.on('status', function(data){
 		console.log(data);
 	});
 });
+
+socket.on('disconnect', function(){
+	angular.element("body").scope().$apply(function(scope){
+		scope.status = "unknown";
+	});
+})
