@@ -2,6 +2,9 @@ html, body{
 	margin:0;
 	padding:0;
 	font-family: monospace;
+	height:100%;
+	width:100%;
+	overflow: hidden;
 
 }
 
@@ -81,8 +84,16 @@ ol{
 	top:61px;
 	bottom:5px;
 }
-#Controls{
-	height: 5px;
-	bottom: 0px;
+#Toggle{
+	height: 1em;
+	top: 0px;
 	border-top: 1px solid black;
+	width: 100%;
+}
+.hidden{
+	display: none;
+}
+#Controls{
+	min-height: 1em;
+	bottom: 0px;
 }

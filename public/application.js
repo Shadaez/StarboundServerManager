@@ -1,5 +1,5 @@
 var socket = io.connect('http://localhost'),
-	Chat = document.getElementById("Chat");
+	Chat = document.getElementById('Chat');
 	liLength = document.getElementsByTagName('li')[0].scrollHeight;
 function StarboundCtrl($scope) {
 	$scope.chatLog = [];
@@ -15,8 +15,28 @@ function StarboundCtrl($scope) {
 	})
 }
 
+//jQuery
+$(ready)
+
+function ready(){
+	var $Toggle = $('#Toggle'),
+		$hidden = $('.hidden');
+	$Toggle.click(function(){
+		$hidden.slideToggle();
+		if ($Toggle.text() === '-'){
+			$Toggle.text('+')
+		} else {
+			$Toggle.text('-')
+		}
+	});
+	$('button').click(function(){
+		socket.emit('exec', {type:$(this).attr('name'), password:$(this).parent().find("input[name=rconPassword]").val()})
+	})
+}
+
+//socket.io
 socket.on('init', function(data){
-	angular.element("body").scope().$apply(function(scope){
+	angular.element('body').scope().$apply(function(scope){
 		scope.chatLog = data.chatLog;
 		scope.logLength = data.logLength;
 		scope.users = data.users;
@@ -28,10 +48,10 @@ socket.on('init', function(data){
 });
 
 socket.on('world', function(data){
-	angular.element("body").scope().$apply(function(scope){
-		if (data.type === "Shutting down") {
+	angular.element('body').scope().$apply(function(scope){
+		if (data.type === 'Shutting down') {
 			scope.worlds.splice(scope.worlds.indexOf(data.world), 1);
-		} else if (data.type === "Loading") {
+		} else if (data.type === 'Loading') {
 			scope.worlds.push(data.world);
 		}
 		console.log(data);
@@ -39,8 +59,8 @@ socket.on('world', function(data){
 });
 
 socket.on('user', function(data){
-	angular.element("body").scope().$apply(function(scope){
-		if (data.type === "disconnected") {
+	angular.element('body').scope().$apply(function(scope){
+		if (data.type === 'disconnected') {
 			scope.users.splice(scope.users.indexOf(data), 1);
 		} else {
 			scope.users.push(data);
@@ -49,7 +69,7 @@ socket.on('user', function(data){
 });
 
 socket.on('chat', function(data){
-	angular.element("body").scope().$apply(function(scope){
+	angular.element('body').scope().$apply(function(scope){
 		scope.chatLog.push(data);
 		if (scope.chatLog.length > scope.logLength) {
 			scope.chatLog.shift();
@@ -59,14 +79,14 @@ socket.on('chat', function(data){
 });
 
 socket.on('status', function(data){
-	angular.element("body").scope().$apply(function(scope){
+	angular.element('body').scope().$apply(function(scope){
 		scope.status = data;
 		console.log(data);
 	});
 });
 
 socket.on('disconnect', function(){
-	angular.element("body").scope().$apply(function(scope){
-		scope.status = "unknown";
+	angular.element('body').scope().$apply(function(scope){
+		scope.status = 'unknown';
 	});
 })

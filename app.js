@@ -7,6 +7,7 @@ var express = require('express'),
 	os = require('os'),
 	config = require('./config.json'),
 	exec = require('child_process').exec,
+	execFile = require('child_process').execFile,
 	sbConfig = JSON.parse(fs.readFileSync(config.path + "starbound.config"));
 
 server.listen(3000);
@@ -99,16 +100,21 @@ io.sockets.on('connection', function(socket) {
 			if ((data.type === "stop" || data.type === "restart") && global.status !== "down") {
 				io.sockets.emit("status", "down");
 				//kill process
-				starbound_server.exit();
+				if (os.platform() === "win32"){
+					console.log(starbound_server.pid)
+					exec("TASKKILL /T /F /PID " + starbound_server.pid )
+				} else {
+					starbound_server.kill("SIGTERM");
+				}
 				//reinitiate globals
-				global = initGlobal
+				global = initGlobal();
 			}
 			if ((data.type === "start" || data.type === "restart") && global.status === "down") {
 				//start process
 				starbound_server = startServer();
 			}
 		} else {
-			io.socket.emit("wrongPassword", true);
+			io.sockets.emit("wrongPassword", true);
 		}
 	});
 });
@@ -133,9 +139,8 @@ function initGlobal() {
 function startServer() {
 	io.sockets.emit("status", "starting");
 	global.status = "starting";
-	return exec(config.path + platform(), function(error, stdout, stderr) {
+	return execFile(config.path + platform(), function(error, stdout, stderr) {
 		if (error !== null) {
-			console.log('exec error: ' + error);
 		}
 	});
 };
