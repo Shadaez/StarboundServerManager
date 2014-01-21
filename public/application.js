@@ -1,19 +1,30 @@
-var socket = io.connect('http://localhost');
-
+var socket = io.connect('http://localhost'),
+	Chat = document.getElementById("Chat");
+	liLength = document.getElementsByTagName('li')[0].scrollHeight;
 function StarboundCtrl($scope) {
-	$scope.chatLog = [],
-	$scope.users = [],
-	$scope.worlds = [],
-	$scope.status = ''
+	$scope.chatLog = [];
+	$scope.logLength;
+	$scope.users = [];
+	$scope.worlds = [];
+	$scope.status = 'unknown';
+	$scope.serverName = 'Starbound Server';
+
+	//watches for chat change, when it changes move scroll down to emulate chat programs
+	$scope.$watch('chatLog', function(){
+		Chat.scrollTop += liLength;
+	})
 }
 
 socket.on('init', function(data){
 	angular.element("body").scope().$apply(function(scope){
 		scope.chatLog = data.chatLog;
+		scope.logLength = data.logLength;
 		scope.users = data.users;
 		scope.worlds = data.worlds;
 		scope.status = data.status;
+		scope.serverName = data.serverName;
 	});
+	Chat.scrollTop += Chat.scrollHeight;
 });
 
 socket.on('world', function(data){
@@ -50,6 +61,6 @@ socket.on('chat', function(data){
 socket.on('status', function(data){
 	angular.element("body").scope().$apply(function(scope){
 		scope.status = data;
-		status(data);
+		console.log(data);
 	});
 });

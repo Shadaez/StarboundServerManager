@@ -1,54 +1,88 @@
 html, body{
 	margin:0;
 	padding:0;
+	font-family: monospace;
+
 }
 
-#Status-up, #Status-up, #Status-up{
-	font-weight: bold;
-	font-style: normal;
-}
-#Status-up{
+#Status.up{
 	color: green;
 }
-#Status-down{
+#Status.down{
 	color: red;
 }
-#Status-starting{
+#Status.starting{
 	color: yellow;
 }
-header, section{
+#Status.unknown{
+	color: grey;
+}
+header ,section{
 	display: block;
 }
-#PlayerList li, #Chat li, #Worlds li{
-	display: block;
-	height: 1em;
+
+h4, h2{
+	height: 2em;
+	margin: 0;
 }
-#Chat, #Controls, #Header, #PlayerList, #Worlds{
+
+li, ol{
+	padding-left: 0px;
+    list-style-type: none;
+    width: 100%;
+    margin: 0;
+}
+
+li:nth-child(odd){
+	background-color: lightgrey;
+}
+
+ol{
 	position: absolute;
+	overflow: auto;
+	bottom: 0px;
+	top: 2em;
 }
-#Chat, #Controls, #Header{
-	left: 200px;
+
+#Chat ol{
+	top: initial;
+	max-height: 100%;
+}
+
+.left, .right{
+	position: absolute;
+	padding: 0;
+	overflow: hidden;
+}
+.right{
+	left: 201px;
 	right: 0px;
 }
-#PlayerList, #Worlds{
+.left{
 	width: 200px;
 }
-#Header{
+.top.right{
 	height:60px;
-	top:0px
-}
-#PlayerList{
 	top:0px;
-	bottom: 200px;
+	border-bottom: 1px solid black;
 }
-#Worlds{
+.top.left{
+	top:0px;
+	bottom: 201px;
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
+}
+.bottom.left{
 	height: 200px;
 	bottom: 0px;
+	border-right: 1px solid black;
 }
-#Chat{
-	top:60px;
+.bottom.right{
+	top:61px;
 	bottom:5px;
 }
 #Controls{
-	bottom:0px;
+	height: 5px;
+	bottom: 0px;
+	border-top: 1px solid black;
 }

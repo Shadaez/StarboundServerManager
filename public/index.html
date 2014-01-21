@@ -6,41 +6,41 @@
     <script src ="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
     <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/application.js"></script>
     <link rel="stylesheet" href="/styles.css" type="text/css"/>
   </head>
   <body ng-controller="StarboundCtrl">
-    <section id="PlayerList">
-      <h4>Online Players<h/4>
-      <ul>
+    <section id="PlayerList" class="top left">
+      <h4>Online Players</h4>
+      <ol>
         <li ng-repeat= "user in users" title="ip: {{user.ip}}">
           {{user.name}}
         </li>
-      </ul>
+      </ol>
     </section>
-    <section id="Worlds">
+    <section id="Worlds" class="bottom left">
       <h4>Active Worlds</h4>
-      <ul>
+      <ol>
         <li ng-repeat= "world in worlds">
           {{world}}
         </li>
-      </ul>
+      </ol>
     </section>
-    <header id="Header">
+    <header id="Header" class="top right">
       <h2> {{serverName}} </h2>
-      <h5> Server is <i id="Status-{{status}}">{{status}}</i>.</h5>
+      <h4> Server is <i id="Status" class="{{status}}">{{status}}</i>.</h4>
     </header>
-    <section id="Chat">
-      <ul>
+    <section id="Chat" class="bottom right">
+      <ol>
         <li ng-repeat="chat in chatLog">
           &lt;{{chat.user}}&gt; {{chat.message}}
         </li>
-      <ul>
+      </ol>
     </section>
-    <section id="Controls">
+    <section id="Controls" class="right">
       <form type = "text">
         <input type="text" ng-model="rconPassword"  size="30" placeholder="Enter RCon Password">
       </form>
     </section>
   </body>
+  <script src="/application.js"></script>
 </html>
