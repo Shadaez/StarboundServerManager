@@ -27,59 +27,30 @@ var regexp = {
 			}
 		}
 		if (this.chat.test(line)) {
+			//add line to chat log, emit to sockets
 			var test = line.match(this.chat);
-			var data = {
+			chatEvent({
 				user: test[1],
 				message: test[2]
-			};
-			io.sockets.emit('chat', data);
-			global.chatLog.push(data);
-			if (global.chatLog.length > global.logLength) {
-				global.chatLog.shift();
-			}
+			});
 
-			console.log("<" + data.user + "> " + data.message);
-
-			//add line to chat log, emit to sockets
 		} else if (this.world.test(line)) {
 			var test = line.match(this.world);
-
-			var data = {
+			//check if world is loading or unloading, and add or remove them from list, emit to sockets
+			worldEvent({
 				type: test[1],
 				world: test[3]
-			};
-			io.sockets.emit("world", data);
-			if (data.type === "Shutting down") {
-				global.worlds.splice(global.worlds.indexOf(data.world), 1);
-			} else if (data.type === "Loading") {
-				global.worlds.push(data.world);
-			}
-			console.log(data.type + " world " + data.world + ".");
-			//check if world is loading or unloading, and add or remove them from list, emit to sockets
+			});
+
 		} else if (this.user.test(line)) {
 			var test = line.match(this.user);
-
-			var data = {
+			//check if they disconnect or connect, and then add or remove them from list, emit to sockets
+			userEvent({
 				name: test[1],
 				ip: test[2],
 				type: test[3]
-			};
-
-			if (data.type === "disconnected") {
-				global.users.splice(global.users.indexOf({
-					name: data.name,
-					ip: data.ip
-				}), 1);
-			} else {
-				global.users.push({
-					name: data.name,
-					ip: data.ip
-				});
-			}
-			io.sockets.emit("user", data)
-			console.log("Client " + data.name + " " + data.type + ".");
-			//check if they disconnect or connect, and then add or remove them from list, emit to sockets
-		} //convert to a foreach or something
+			});
+		}
 	},
 	user: /^Info:\s+Client '(.*)' <\d> \((\d+.\d+.\d+.\d+):\d+\) ((dis)?connected)/,
 	world: /^Info:\s+(Loading|Shutting down)\s?(world db for)?\sworld\s([:?\-?\w]+)/,
@@ -100,9 +71,9 @@ io.sockets.on('connection', function(socket) {
 			if ((data.type === "stop" || data.type === "restart") && global.status !== "down") {
 				io.sockets.emit("status", "down");
 				//kill process
-				if (os.platform() === "win32"){
+				if (os.platform() === "win32") {
 					console.log(starbound_server.pid)
-					exec("TASKKILL /T /F /PID " + starbound_server.pid )
+					exec("TASKKILL /T /F /PID " + starbound_server.pid)
 				} else {
 					starbound_server.kill("SIGTERM");
 				}
@@ -134,16 +105,15 @@ function initGlobal() {
 	};
 	io.sockets.emit('init', global)
 	return global;
-};
+}
 
 function startServer() {
 	io.sockets.emit("status", "starting");
 	global.status = "starting";
 	return execFile(config.path + platform(), function(error, stdout, stderr) {
-		if (error !== null) {
-		}
+		if (error !== null) {}
 	});
-};
+}
 
 function platform() {
 	var platform = os.platform(),
@@ -155,4 +125,40 @@ function platform() {
 	} else {
 		return "linux32/starbound_server"
 	}
+}
+
+function worldEvent(data) {
+	io.sockets.emit("world", data);
+	if (data.type === "Shutting down") {
+		global.worlds.splice(global.worlds.indexOf(data.world), 1);
+	} else if (data.type === "Loading") {
+		global.worlds.push(data.world);
+	}
+}
+
+function chatEvent(data) {
+	io.sockets.emit('chat', data);
+	global.chatLog.push(data);
+	if (global.chatLog.length > global.logLength) {
+		global.chatLog.shift();
+	}
+}
+
+function userEvent(data) {
+	if (data.type === "disconnected") {
+		global.users.splice(global.users.indexOf({
+			name: data.name,
+			ip: data.ip
+		}), 1);
+	} else {
+		global.users.push({
+			name: data.name,
+			ip: data.ip
+		});
+	}
+	chatEvent({
+		user:"server",
+		message:"User" + data.name + "has" + data.type + "."
+	})
+	io.sockets.emit("user", data)
 }
