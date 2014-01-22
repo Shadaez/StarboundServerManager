@@ -58,10 +58,7 @@ var regexp = {
 	server: /^Info:\s+bind.*/
 }
 
-//reads 
-starbound_server.stdout.on('data', function(data) {
-	regexp.tests(data);
-});
+beginListener();
 
 //socket.io
 io.sockets.on('connection', function(socket) {
@@ -83,6 +80,7 @@ io.sockets.on('connection', function(socket) {
 			if ((data.type === "start" || data.type === "restart") && global.status === "down") {
 				//start process
 				starbound_server = startServer();
+				beginListener();
 			}
 		} else {
 			io.sockets.emit("wrongPassword", true);
@@ -110,9 +108,7 @@ function initGlobal() {
 function startServer() {
 	io.sockets.emit("status", "starting");
 	global.status = "starting";
-	return execFile(config.path + platform(), function(error, stdout, stderr) {
-		if (error !== null) {}
-	});
+	return execFile(config.path + platform(), function(error, stdout, stderr) {});
 }
 
 function platform() {
@@ -157,8 +153,14 @@ function userEvent(data) {
 		});
 	}
 	chatEvent({
-		user:"server",
-		message:"User " + data.name + " has " + data.type + "."
+		user: "server",
+		message: "User " + data.name + " has " + data.type + "."
 	})
 	io.sockets.emit("user", data)
+}
+
+function beginListener() {
+	starbound_server.stdout.on('data', function(data) {
+		regexp.tests(data);
+	});
 }

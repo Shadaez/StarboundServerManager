@@ -1,6 +1,7 @@
 var socket = io.connect('http://localhost'),
 	Chat = document.getElementById('Chat');
-	liLength = document.getElementsByTagName('li')[0].scrollHeight;
+liLength = document.getElementsByTagName('li')[0].scrollHeight;
+
 function StarboundCtrl($scope) {
 	$scope.chatLog = [];
 	$scope.logLength;
@@ -10,7 +11,7 @@ function StarboundCtrl($scope) {
 	$scope.serverName = 'Starbound Server';
 
 	//watches for chat change, when it changes move scroll down to emulate chat programs
-	$scope.$watch('chatLog', function(){
+	$scope.$watch('chatLog', function() {
 		Chat.scrollTop += liLength;
 	})
 }
@@ -18,25 +19,28 @@ function StarboundCtrl($scope) {
 //jQuery
 $(ready)
 
-function ready(){
+function ready() {
 	var $Toggle = $('#Toggle'),
 		$hidden = $('.hidden');
-	$Toggle.click(function(){
+	$Toggle.click(function() {
 		$hidden.slideToggle();
-		if ($Toggle.text() === '-'){
+		if ($Toggle.text() === '-') {
 			$Toggle.text('+')
 		} else {
 			$Toggle.text('-')
 		}
 	});
-	$('button').click(function(){
-		socket.emit('exec', {type:$(this).attr('name'), password:$(this).parent().find("input[name=rconPassword]").val()})
+	$('button').click(function() {
+		socket.emit('exec', {
+			type: $(this).attr('name'),
+			password: $(this).parent().find("input[name=rconPassword]").val()
+		})
 	})
 }
 
 //socket.io
-socket.on('init', function(data){
-	angular.element('body').scope().$apply(function(scope){
+socket.on('init', function(data) {
+	angular.element('body').scope().$apply(function(scope) {
 		scope.chatLog = data.chatLog;
 		scope.logLength = data.logLength;
 		scope.users = data.users;
@@ -47,8 +51,8 @@ socket.on('init', function(data){
 	Chat.scrollTop += Chat.scrollHeight;
 });
 
-socket.on('world', function(data){
-	angular.element('body').scope().$apply(function(scope){
+socket.on('world', function(data) {
+	angular.element('body').scope().$apply(function(scope) {
 		if (data.type === 'Shutting down') {
 			scope.worlds.splice(scope.worlds.indexOf(data.world), 1);
 		} else if (data.type === 'Loading') {
@@ -58,8 +62,8 @@ socket.on('world', function(data){
 	});
 });
 
-socket.on('user', function(data){
-	angular.element('body').scope().$apply(function(scope){
+socket.on('user', function(data) {
+	angular.element('body').scope().$apply(function(scope) {
 		if (data.type === 'disconnected') {
 			scope.users.splice(scope.users.indexOf(data), 1);
 		} else {
@@ -68,8 +72,8 @@ socket.on('user', function(data){
 	});
 });
 
-socket.on('chat', function(data){
-	angular.element('body').scope().$apply(function(scope){
+socket.on('chat', function(data) {
+	angular.element('body').scope().$apply(function(scope) {
 		scope.chatLog.push(data);
 		if (scope.chatLog.length > scope.logLength) {
 			scope.chatLog.shift();
@@ -78,15 +82,15 @@ socket.on('chat', function(data){
 	});
 });
 
-socket.on('status', function(data){
-	angular.element('body').scope().$apply(function(scope){
+socket.on('status', function(data) {
+	angular.element('body').scope().$apply(function(scope) {
 		scope.status = data;
 		console.log(data);
 	});
 });
 
-socket.on('disconnect', function(){
-	angular.element('body').scope().$apply(function(scope){
+socket.on('disconnect', function() {
+	angular.element('body').scope().$apply(function(scope) {
 		scope.status = 'unknown';
 	});
 })
