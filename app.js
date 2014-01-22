@@ -158,7 +158,7 @@ function userEvent(data) {
 	}
 	chatEvent({
 		user:"server",
-		message:"User" + data.name + "has" + data.type + "."
+		message:"User " + data.name + " has " + data.type + "."
 	})
 	io.sockets.emit("user", data)
 }
