@@ -36,8 +36,8 @@ li, ol{
     margin: 0;
 }
 
-li:nth-child(odd){
-	background-color: lightgrey;
+li:nth-child(odd), #Chat{
+	background-color: #D4DADE;
 }
 
 ol{
@@ -45,6 +45,7 @@ ol{
 	overflow: auto;
 	bottom: 0px;
 	top: 2em;
+	background-color: #D3D8DC;
 }
 
 #Chat ol{
@@ -58,42 +59,69 @@ ol{
 	overflow: hidden;
 }
 .right{
-	left: 201px;
+	left: 200px;
 	right: 0px;
+	background-color: #CFD4D8;
 }
 .left{
 	width: 200px;
+	z-index: 10;
+	background-color: #C5CACD;
 }
 .top.right{
 	height:60px;
 	top:0px;
-	border-bottom: 1px solid black;
 }
 .top.left{
 	top:0px;
-	bottom: 201px;
-	border-bottom: 1px solid black;
-	border-right: 1px solid black;
+	bottom: 200px;
+	overflow: hidden;
 }
 .bottom.left{
 	height: 200px;
 	bottom: 0px;
-	border-right: 1px solid black;
 }
 .bottom.right{
-	top:61px;
-	bottom:5px;
+	top:60px;
+	bottom:1em;
 }
+
+.bottom.left:after, .bottom.right:after, .top.right:after, #Controls:after{
+	content:'';
+	width:100%;
+	height:100%;
+	position:absolute;
+	top:0px;
+	left:0px;
+	overflow: hidden;
+	display: block;
+	pointer-events:none;
+}
+.bottom.right:after{
+	box-shadow: inset 12px 12px 4px -12px black;
+}
+.bottom.left:after{
+	box-shadow: inset 0px 12px 4px -12px   black;
+}
+.top.right:after, #Controls:after{
+	box-shadow: inset 12px 0px 4px -12px black;
+}
+
 #Toggle{
+	position:relative;
 	height: 1em;
 	top: 0px;
-	border-top: 1px solid black;
 	width: 100%;
+	line-height: 1em;
 }
 .hidden{
 	display: none;
 }
 #Controls{
+	position: absolute;
 	min-height: 1em;
+	width: 100%;
 	bottom: 0px;
+	box-shadow: 0px 12px 4px 12px black;
+	overflow-x: hidden;
 }
