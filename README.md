@@ -9,6 +9,6 @@ example:
 Will add kicking, banning, etc, as the developers add the features into the base game.
 
 To do:
--[] Add a first run config tool.
--[] Find a more elegant way to shut the server down, to prevent data loss.
--[] Clean up css.
+- [ ] Add a first run config tool
+- [ ] Find a more elegant way to shut the server down, to prevent data loss
+- [ ] Clean up css
