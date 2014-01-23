@@ -1,4 +1,5 @@
 {
 	"path": "D:/Steam/steamapps/common/Starbound/",
-	"password": ["pass123"]
+	"password": ["pass123"],
+	"port": 8080
 }

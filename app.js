@@ -1,29 +1,28 @@
 var express = require('express'),
-	path = require("path"),
-	app = express().use(express.static(path.join(__dirname, "public"))),
+	path = require('path'),
+	app = express().use(express.static(path.join(__dirname, 'public'))),
 	server = require('http').createServer(app),
-	io = require('socket.io').listen(server),
+	io = require('socket.io').listen(server, {log: false}),
 	fs = require('fs'),
 	os = require('os'),
 	config = require('./config.json'),
 	exec = require('child_process').exec,
 	execFile = require('child_process').execFile,
-	sbConfig = JSON.parse(fs.readFileSync(config.path + "starbound.config"));
+	sbConfig = JSON.parse(fs.readFileSync(config.path + 'starbound.config'));
 
-server.listen(3000);
+server.listen(config.port);
 
-app.get("/");
+app.get('/');
 
 var global = initGlobal();
 var starbound_server = startServer();
 var regexp = {
 	//runs a match on the line on all the regexps (except server, that only needs to run when the servers being started) and broadcasts to all sockets.
 	tests: function(line) {
-		if (global.status !== "up") {
+		if (global.status !== 'up') {
 			if (this.server.test(line)) {
-				console.log("Server's Up!")
-				io.sockets.emit("status", "up");
-				global.status = "up";
+				io.sockets.emit('data', {status:'up'});
+				global.status = 'up';
 			}
 		}
 		if (this.chat.test(line)) {
@@ -52,7 +51,7 @@ var regexp = {
 			});
 		}
 	},
-	user: /^Info:\s+Client '(.*)' <\d> \((\d+.\d+.\d+.\d+):\d+\) ((dis)?connected)/,
+	user: /^Info:\s+Client "(.*)" <\d> \((\d+.\d+.\d+.\d+):\d+\) ((dis)?connected)/,
 	world: /^Info:\s+(Loading|Shutting down)\s?(world db for)?\sworld\s([:?\-?\w]+)/,
 	chat: /^Info:\s+<(.*)>\s(.*)/,
 	server: /^Info:\s+bind.*/
@@ -62,28 +61,25 @@ beginListener();
 
 //socket.io
 io.sockets.on('connection', function(socket) {
-	socket.emit('init', global);
+	socket.emit('data', global);
 	socket.on('exec', function(data) {
 		if (authenticate(data.password)) {
-			if ((data.type === "stop" || data.type === "restart") && global.status !== "down") {
-				io.sockets.emit("status", "down");
+			if ((data.type === 'stop' || data.type === 'restart') && global.status !== 'down') {
+				io.sockets.emit('data', {status: 'down'});
 				//kill process
-				if (os.platform() === "win32") {
-					console.log(starbound_server.pid)
-					exec("TASKKILL /T /F /PID " + starbound_server.pid)
-				} else {
-					starbound_server.kill("SIGTERM");
-				}
+				starbound_server.kill('SIGINT');
+
 				//reinitiate globals
 				global = initGlobal();
 			}
-			if ((data.type === "start" || data.type === "restart") && global.status === "down") {
+			if ((data.type === 'start' || data.type === 'restart') && global.status === 'down') {
 				//start process
+				delete starbound_server;
 				starbound_server = startServer();
 				beginListener();
 			}
 		} else {
-			io.sockets.emit("wrongPassword", true);
+			io.sockets.emit('wrongPassword', true);
 		}
 	});
 });
@@ -94,40 +90,40 @@ function authenticate(password) {
 
 function initGlobal() {
 	var global = {
-		status: "down",
+		status: 'down',
 		users: [],
 		worlds: [],
 		chatLog: [],
 		logLength: 50,
 		serverName: sbConfig.serverName
 	};
-	io.sockets.emit('init', global)
+	io.sockets.emit('data', global)
 	return global;
 }
 
 function startServer() {
-	io.sockets.emit("status", "starting");
-	global.status = "starting";
+	io.sockets.emit('data', {status:'starting'});
+	global.status = 'starting';
 	return execFile(config.path + platform(), function(error, stdout, stderr) {});
 }
 
 function platform() {
 	var platform = os.platform(),
 		arch = os.arch();
-	if (platform === "win32") {
-		return "win32/starbound_server.exe";
-	} else if (arch === "x64") {
-		return "linux64/starbound_server"
+	if (platform === 'win32') {
+		return 'win32/starbound_server.exe';
+	} else if (arch === 'x64') {
+		return 'linux64/starbound_server'
 	} else {
-		return "linux32/starbound_server"
+		return 'linux32/starbound_server'
 	}
 }
 
 function worldEvent(data) {
-	io.sockets.emit("world", data);
-	if (data.type === "Shutting down") {
+	io.sockets.emit('world', data);
+	if (data.type === 'Shutting down') {
 		global.worlds.splice(global.worlds.indexOf(data.world), 1);
-	} else if (data.type === "Loading") {
+	} else if (data.type === 'Loading') {
 		global.worlds.push(data.world);
 	}
 }
@@ -141,7 +137,7 @@ function chatEvent(data) {
 }
 
 function userEvent(data) {
-	if (data.type === "disconnected") {
+	if (data.type === 'disconnected') {
 		global.users.splice(global.users.indexOf({
 			name: data.name,
 			ip: data.ip
@@ -153,10 +149,10 @@ function userEvent(data) {
 		});
 	}
 	chatEvent({
-		user: "server",
-		message: "User " + data.name + " has " + data.type + "."
+		user: 'server',
+		message: 'User ' + data.name + ' has ' + data.type + '.'
 	})
-	io.sockets.emit("user", data)
+	io.sockets.emit('user', data)
 }
 
 function beginListener() {

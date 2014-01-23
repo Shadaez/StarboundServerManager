@@ -20,9 +20,6 @@ html, body{
 #Status.unknown{
 	color: grey;
 }
-header ,section{
-	display: block;
-}
 
 h4, h2{
 	height: 2em;

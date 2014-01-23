@@ -39,18 +39,6 @@ function ready() {
 }
 
 //socket.io
-socket.on('init', function(data) {
-	angular.element('body').scope().$apply(function(scope) {
-		scope.chatLog = data.chatLog;
-		scope.logLength = data.logLength;
-		scope.users = data.users;
-		scope.worlds = data.worlds;
-		scope.status = data.status;
-		scope.serverName = data.serverName;
-	});
-	Chat.scrollTop += Chat.scrollHeight;
-});
-
 socket.on('world', function(data) {
 	angular.element('body').scope().$apply(function(scope) {
 		if (data.type === 'Shutting down') {
@@ -58,7 +46,6 @@ socket.on('world', function(data) {
 		} else if (data.type === 'Loading') {
 			scope.worlds.push(data.world);
 		}
-		console.log(data);
 	});
 });
 
@@ -78,19 +65,18 @@ socket.on('chat', function(data) {
 		if (scope.chatLog.length > scope.logLength) {
 			scope.chatLog.shift();
 		}
-		console.log(data);
 	});
 });
 
-socket.on('status', function(data) {
-	angular.element('body').scope().$apply(function(scope) {
-		scope.status = data;
-		console.log(data);
-	});
-});
+socket.on('data', updateScope);
 
 socket.on('disconnect', function() {
-	angular.element('body').scope().$apply(function(scope) {
-		scope.status = 'unknown';
-	});
+	updateScope({status: 'unknown'});
 })
+
+
+function updateScope(data){
+	angular.element('body').scope().$apply(function(scope) {
+		$.extend(scope, data)
+	});
+}
