@@ -10,6 +10,10 @@ var express = require('express'),
 	execFile = require('child_process').execFile,
 	sbConfig = JSON.parse(fs.readFileSync(config.path + 'starbound.config'));
 
+if (authenticate('pass123')){
+	console.log("PLEASE EDIT config.json AND REMOVE OR CHANGE THE DEFAULT PASSWORD")
+}
+
 server.listen(config.port);
 
 app.get('/');
