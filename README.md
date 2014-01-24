@@ -1,6 +1,8 @@
 StarboundServerManager
 ======================
 
+Currently unrealeased! I'm polishing it up and the first version should be available before the newest patch is released.
+
 Node.js program that starts a child process for the Starbound server and pushes useful data to a web page using Socket.io. Also allows starting and stopping of the server.
 
 example:
