@@ -1,6 +1,5 @@
 var express = require('express'),
-	path = require('path'),
-	app = express().use(express.static(path.join(__dirname, 'public'))),
+	app = express().use(express.static('public')),
 	server = require('http').createServer(app),
 	io = require('socket.io').listen(server, {
 		log: false
