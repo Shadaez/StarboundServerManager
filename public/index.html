@@ -2,50 +2,50 @@
 <html ng-app>
   <head>
     <title>Starbound Server Manager</title>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src = "//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <link rel="stylesheet" href="/styles.css" type="text/css"/>
+    <script src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+    <script src = '//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js'></script>
+    <script src='/socket.io/socket.io.js'></script>
+    <link rel='stylesheet' href='/styles.css' type='text/css'/>
   </head>
-  <body ng-controller="StarboundCtrl">
-    <section id="PlayerList" class="top left">
+  <body ng-controller='StarboundCtrl'>
+    <section id='PlayerList' class='top left'>
       <h4>Online Players</h4>
       <ol>
-        <li ng-repeat= "user in users" title="ip: {{user.ip}}">
+        <li ng-repeat= 'user in users' title='ip: {{user.ip}}'>
           {{user.name}}
         </li>
       </ol>
     </section>
-    <section id="Worlds" class="bottom left">
-      <h4>Active Worlds</h4>
+    <section id='Systems' class='bottom left'>
+      <h4>Active Systems</h4>
       <ol>
-        <li ng-repeat= "world in worlds">
-          {{world}}
+        <li ng-repeat= 'system in systems' title='Active worlds in system: {{system.count}}'>
+          {{system.name}}
         </li>
       </ol>
     </section>
-    <header id="Header" class="top right">
+    <header id='Header' class='top right'>
       <h2> {{serverName}} </h2>
-      <h4> Server is <i id="Status" class="{{status}}">{{status}}</i>.</h4>
+      <h4> Server is <i id='Status' class='{{status}}'>{{status}}</i>.</h4>
     </header>
-    <section id="Chat" class="bottom right">
+    <section id='Chat' class='bottom right'>
       <ol>
-        <li ng-repeat="chat in chatLog">
+        <li ng-repeat='chat in chatLog'>
           &lt;{{chat.user}}&gt; {{chat.message}}
         </li>
       </ol>
     </section>
-    <section id="Controls" class="right">
-      <div id="Toggle">+</div>
-      <div class="hidden">
-        <form type = "text">
-          <input type="password" name="rconPassword" ng-model="rconPassword"  size="30" placeholder="Enter RCon Password">
-          <button type="button" name="start">Start</button>
-          <button type="button" name="stop">Stop</button>
-          <button type="button" name="restart">Restart</button>
+    <section id='Controls' class='right'>
+      <div id='Toggle'>+</div>
+      <div class='hidden'>
+        <form type = 'text'>
+          <input type='password' name='rconPassword' ng-model='rconPassword'  size='30' placeholder='Enter RCon Password'>
+          <button type='button' name='start'>Start</button>
+          <button type='button' name='stop'>Stop</button>
+          <button type='button' name='restart'>Restart</button>
         </form>
       </div>
     </section>
   </body>
-  <script src="/application.js"></script>
+  <script src='/application.js'></script>
 </html>

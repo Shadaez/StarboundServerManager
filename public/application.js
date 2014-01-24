@@ -1,23 +1,22 @@
 var socket = io.connect('http://localhost'),
-	Chat = document.getElementById('Chat');
-liLength = document.getElementsByTagName('li')[0].scrollHeight;
+	Chat = document.getElementById('Chat'),
+	liLength = document.getElementsByTagName('li')[0].scrollHeight;
 
 function StarboundCtrl($scope) {
 	$scope.chatLog = [];
-	$scope.logLength;
+	$scope.logLength = 50;
 	$scope.users = [];
-	$scope.worlds = [];
+	$scope.systems = {};
 	$scope.status = 'unknown';
 	$scope.serverName = 'Starbound Server';
-
 	//watches for chat change, when it changes move scroll down to emulate chat programs
 	$scope.$watch('chatLog', function() {
 		Chat.scrollTop += liLength;
-	})
+	});
 }
 
 //jQuery
-$(ready)
+$(ready);
 
 function ready() {
 	var $Toggle = $('#Toggle'),
@@ -25,26 +24,38 @@ function ready() {
 	$Toggle.click(function() {
 		$hidden.slideToggle();
 		if ($Toggle.text() === '-') {
-			$Toggle.text('+')
+			$Toggle.text('+');
 		} else {
-			$Toggle.text('-')
+			$Toggle.text('-');
 		}
 	});
 	$('button').click(function() {
 		socket.emit('exec', {
 			type: $(this).attr('name'),
 			password: $(this).parent().find("input[name=rconPassword]").val()
-		})
-	})
+		});
+	});
 }
 
 //socket.io
-socket.on('world', function(data) {
+socket.on('system', function(data) {
 	angular.element('body').scope().$apply(function(scope) {
 		if (data.type === 'Shutting down') {
-			scope.worlds.splice(scope.worlds.indexOf(data.world), 1);
+			if (scope.systems[data.system]) {
+				scope.systems[data.system].count -= 1;
+				if (scope.systems[data.system].count <= 0) {
+					delete scope.systems[data.system];
+				}
+			}
 		} else if (data.type === 'Loading') {
-			scope.worlds.push(data.world);
+			if (scope.systems[data.system]) {
+				scope.systems[data.system].count += 1;
+			} else {
+				scope.systems[data.system] = {
+					name: data.system,
+					count: 1
+				};
+			}
 		}
 	});
 });
@@ -71,12 +82,13 @@ socket.on('chat', function(data) {
 socket.on('data', updateScope);
 
 socket.on('disconnect', function() {
-	updateScope({status: 'unknown'});
-})
+	updateScope({
+		status: 'unknown'
+	});
+});
 
-
-function updateScope(data){
+function updateScope(data) {
 	angular.element('body').scope().$apply(function(scope) {
-		$.extend(scope, data)
+		$.extend(scope, data);
 	});
 }
