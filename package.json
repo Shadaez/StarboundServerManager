@@ -16,7 +16,6 @@
 		"url": "https://github.com/Shadaez/StarboundServerManager/issues"
 	},
 	"homepage": "https://github.com/Shadaez/StarboundServerManager",
-
 	"dependencies": {
 		"express": "~3.4.8",
 		"socket.io": "~0.9.16"

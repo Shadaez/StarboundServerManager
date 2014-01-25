@@ -105,7 +105,7 @@ function initGlobal() {
 		users: [],
 		systems: {},
 		chatLog: [],
-		logLength: 50,
+		logLength: 50 || config.logLength,
 		serverName: sbConfig.serverName
 	};
 	io.sockets.emit('data', global);
