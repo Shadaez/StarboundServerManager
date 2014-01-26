@@ -13,4 +13,13 @@ website:
 
 ![alt tag](http://i.imgur.com/x9C1pyL.gif)
 
-To get it working, first install Node.js. Its website should have the details: http://nodejs.org/ . Then, either git clone the repo into a folder or download the .zip https://github.com/Shadaez/StarboundServerManager/archive/master.zip and extract it. In your CLI, cd into the folder and run npm install. Edit the config.json, and then run node app.js. Your server should be shut down before you run it, or there will be two servers being ran at the same time. To access the web page locally, go to localhost:8080 (or whatever port you set it to).
+
+Getting Started
+===============
+
+1. Download and install Node.js here: http://nodejs.org/
+2. Download the latest release here: https://github.com/Shadaez/StarboundServerManager/releases 
+3. Extract the zip from the previous step whereever you'd like it installed.
+4. In the folder you extracted the zip, open up config.json and edit the path to be your starbound folder's root directory
+5. Make sure your server isn't up, then run start_server.bat (or alternatively start CMD and run npm install in the folder you extracted it to, then "node app.js")
+6. You're done! your game server should be up and the website will be at localhost:8080 (you can change the port in config.json as well)
