@@ -73,6 +73,7 @@ ol{
 .bottom.left{
 	height: 215px;
 	bottom: 0px;
+	font-size: small;
 }
 .bottom.right{
 	top:60px;

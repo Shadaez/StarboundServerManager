@@ -61,8 +61,8 @@ var regexp = {
 			});
 		}
 	},
-	user: /^Info:\s+Client '(.*)' <\d> \((\d+.\d+.\d+.\d+):\d+\) ((dis)?connected)/,
-	world: /^Info:\s+(Loading|Shutting down)\s?(world db for)?\sworld\s([\w]+):([-?\d]+):([-?\d]+):[-?\d]+:[-?\d]+:[-?\d]+/,
+	user: /^Info:\s+UniverseServer:\s+Client '(.*)' <\d> \((\d+.\d+.\d+.\d+):\d+\) ((dis)?connected)/,
+	world: /^Info:\s+UniverseServer:\s+(Loading|Shutting down)\s?(world db for)?\sworld\s([\w]+):([-?\d]+):([-?\d]+):[-?\d]+:[-?\d]+:[-?\d]+\s(due to inactivity)?/,
 	chat: /^Info:\s+<(.*)>\s(.*)/,
 	server: /^Info:\s+bind.*/
 };
