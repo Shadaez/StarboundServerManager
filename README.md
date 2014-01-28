@@ -20,6 +20,8 @@ Getting Started
 1. Download and install Node.js here: http://nodejs.org/
 2. Download the latest release here: https://github.com/Shadaez/StarboundServerManager/releases 
 3. Extract the zip from the previous step whereever you'd like it installed.
-4. In the folder you extracted the zip, open up config.json and edit the path to be your starbound folder's root directory
+4. In the folder you extracted the zip, open up config.json and edit the path to be your starbound folder's root directory NOTE: paths must use an escaped backslash "\\\\" or forward slash "/". eg: 
+"C:/Program Files (x86)/Steam/SteamApps/common/Starbound/" or 
+"C:\\\\Program Files (x86)\\\\Steam\\\\SteamApps\\\\common\\\\Starbound\\\\" and passwords are stored an an array eg: ["pass1", "pass2"] so you can have multiple if you'd like.
 5. Make sure your server isn't up, then run start_server.bat (or alternatively start CMD and run npm install in the folder you extracted it to, then "node app.js")
 6. You're done! your game server should be up and the website will be at localhost:8080 (you can change the port in config.json as well)
