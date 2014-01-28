@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost'),
+var socket = io.connect(window.location.host),
 	Chat = document.getElementById('Chat'),
 	liLength = document.getElementsByTagName('li')[0].scrollHeight;
 
