@@ -1,6 +1,5 @@
 var socket = io.connect((window.location.hostname == 'localhost')? '127.0.0.1:' + window.location.port : window.location.host),
-	Chat = document.getElementById('Chat'),
-	liLength = document.getElementsByTagName('li')[0].scrollHeight;
+	liHeight = 16;
 
 function StarboundCtrl($scope) {
 	$scope.chatLog = [];
@@ -9,9 +8,14 @@ function StarboundCtrl($scope) {
 	$scope.systems = {};
 	$scope.status = 'unknown';
 	$scope.serverName = 'Starbound Server';
-	//watches for chat change, when it changes move scroll down to emulate chat programs
-	$scope.$watch('chatLog', function() {
-		Chat.scrollTop += liLength;
+	//watches for chat change, when it changes if you're at the bottom, move scroll down to emulate chat programs
+	$scope.$watchCollection('chatLog', function() {
+		var Chat = $('#Chat').find('ol')[0];
+		if(Chat.scrollTop + Chat.clientHeight === Chat.scrollHeight){
+			setTimeout(function(){
+				Chat.scrollTop += Chat.clientHeight;
+			}, 10);
+		} 
 	});
 }
 
@@ -20,7 +24,9 @@ $(ready);
 
 function ready() {
 	var $Toggle = $('#Toggle'),
-		$hidden = $('.hidden');
+		$hidden = $('.hidden'),
+		$Chat =  $('#Chat').find('ol')[0];
+	$Chat.scrollTop = $Chat.scrollHeight;
 	$Toggle.click(function() {
 		$hidden.slideToggle();
 		if ($Toggle.text() === '-') {
@@ -35,6 +41,7 @@ function ready() {
 			password: $(this).parent().find("input[name=rconPassword]").val()
 		});
 	});
+
 }
 
 //socket.io

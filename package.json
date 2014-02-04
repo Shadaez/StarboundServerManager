@@ -1,23 +1,23 @@
 {
-	"name": "StarboundServerManager",
-	"version": "0.1.0",
-	"description": "",
-	"main": "app.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/Shadaez/StarboundServerManager.git"
-	},
-	"author": "Justin Wheeler",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/Shadaez/StarboundServerManager/issues"
-	},
-	"homepage": "https://github.com/Shadaez/StarboundServerManager",
-	"dependencies": {
-		"express": "~3.4.8",
-		"socket.io": "~0.9.16"
-	}
+  "name": "StarboundServerManager",
+  "version": "0.1.2",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Shadaez/StarboundServerManager.git"
+  },
+  "author": "Justin Wheeler",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Shadaez/StarboundServerManager/issues"
+  },
+  "homepage": "https://github.com/Shadaez/StarboundServerManager",
+  "dependencies": {
+    "express": "~3.4.8",
+    "socket.io": "~0.9.16"
+  }
 }

@@ -1,0 +1,21 @@
+{
+  "name": "StarboundServerManager",
+  "version": "0.1.2",
+  "homepage": "https://github.com/Shadaez/StarboundServerManager",
+  "authors": [
+    "Justin Wheeler <justintymewheeler@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.11",
+    "jquery": "~2.1.0"
+  }
+}
