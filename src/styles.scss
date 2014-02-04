@@ -1,85 +1,22 @@
-html, body{
-	margin:0;
-	padding:0;
-	font-family: monospace;
-	height:100%;
-	width:100%;
-	overflow: hidden;
+@mixin box-shadow($top, $left, $blur, $spread, $color, $inset:"") {
+	-webkit-box-shadow:$top $left $blur $spread $color #{$inset};
+	-moz-box-shadow:$top $left $blur $spread $color #{$inset};
+	box-shadow:$top $left $blur $spread $color #{$inset};
 }
-#Status.up{
-	color: green;
-}
-#Status.down{
-	color: red;
-}
-#Status.starting{
-	color: yellow;
-}
-#Status.unknown{
-	color: grey;
-}
-h4, h2{
-	height: 2em;
-	margin: 0;
-	padding-left: 5px;
-}
-li{
-	padding-left: 5px;
-}
-ol{
-	padding-left: 0px;
-    list-style-type: none;
-    width: 100%;
-    margin: 0;
-}
-li:nth-child(odd), #Chat{
-	background-color: #D4DADE;
-}
-ol{
-	position: absolute;
-	overflow: auto;
-	bottom: 0px;
-	top: 2em;
-	background-color: #D3D8DC;
-}
-#Chat ol{
-	top: initial;
-	max-height: 100%;
-}
-.left, .right{
-	position: absolute;
-	padding: 0;
-	overflow: hidden;
-}
-.right{
-	left: 215px;
-	right: 0px;
-	background-color: #CFD4D8;
-}
-.left{
-	width: 215px;
-	z-index: 10;
-	background-color: #C5CACD;
-}
-.top.right{
-	height:60px;
-	top:0px;
-}
-.top.left{
-	top:0px;
-	bottom: 215px;
-	overflow: hidden;
-}
-.bottom.left{
-	height: 215px;
-	bottom: 0px;
-	font-size: small;
-}
-.bottom.right{
-	top:60px;
-	bottom:1em;
-}
-.bottom.left:after, .bottom.right:after, .top.right:after, #Controls:after{
+
+$primary-color: #CFD4D8;
+$secondary-color: #C5CACD;
+$tertiary-color: #D3D8DC;
+$quaternary-color: #D4DADE;
+$font-family: monospace;
+$shadow-size: 4px;
+$shadow-offset: 12px;
+$shadow-color: black;
+$side-width: 215px;
+$header-height: 60px;
+$world-height: 215px;
+
+%after{
 	content:'';
 	width:100%;
 	height:100%;
@@ -90,15 +27,135 @@ ol{
 	display: block;
 	pointer-events:none;
 }
-.bottom.right:after{
-	box-shadow: inset 12px 12px 4px -12px black;
+
+%whitespace{
+	margin: 0;
+	padding-left: 5px;
+	width: 100%;
 }
-.bottom.left:after{
-	box-shadow: inset 0px 12px 4px -12px   black;
+
+%absolute{
+	position: absolute;
+	padding: 0;
+	overflow: hidden;
+	top: 0;
+	bottom: 0;
+	width: 100%;
 }
-.top.right:after, #Controls:after{
-	box-shadow: inset 12px 0px 4px -12px black;
+
+html, body{
+	margin:0;
+	padding:0;
+	font-family: $font-family;
+	font-size: small;
+	height:100%;
+	width:100%;
+	overflow: hidden;
 }
+
+#Chat ol{
+	top: initial;
+}
+
+ol{
+	@extend %whitespace;
+	@extend %absolute;
+	padding-left: 0;
+    list-style-type: none;
+	bottom: 0px;
+	top: 2em;
+	max-height: 100%;
+	li{
+		@extend %whitespace;
+		background-color: $tertiary-color;
+		&:nth-child(odd){
+			background-color: $quaternary-color;
+		}
+	}
+}
+
+#Status{
+	.up{
+		color: green;
+	}
+	.down{
+		color: red;
+	}
+	.starting{
+		color: yellow;
+	}
+	.unknown{
+		color: grey;
+	}
+}
+
+h4, h2{
+	@extend %whitespace;
+	height: 2em;
+}
+
+.right{
+	@extend %absolute;
+	left: $side-width;
+	right: 0;
+	background-color: $primary-color;
+	.top{
+		@extend %absolute;
+		height: $header-height;
+		&:after{
+			@extend %after;
+			@include box-shadow(inset, $shadow-offset, 0, $shadow-size, (-$shadow-offset), $shadow-color);
+		}
+	}
+	.bottom{
+		@extend %absolute;
+		top: $header-height;
+		bottom: 1em;
+	}
+	#Controls{
+		@extend %whitespace;
+		background-color: $primary-color;
+	}
+	.bottom, #Controls{
+		&:after{
+			@extend %after;
+			@include box-shadow(inset, $shadow-offset, $shadow-offset, $shadow-size, (-$shadow-offset), $shadow-color);
+		}
+	}
+}
+.left{
+	@extend %absolute;
+	width: $side-width;
+	z-index: 10;
+	background-color: $secondary-color;
+	.top{
+		@extend %absolute;
+		bottom: $world-height;
+		&:after{
+			@extend %after;
+		}
+	}
+	.bottom{
+		@extend %absolute;
+		height: $world-height;
+		top:initial;
+		bottom: 0px;
+		&:after{
+			@extend %after;
+			@include box-shadow(inset, 0, $shadow-offset, $shadow-size, (-$shadow-offset), $shadow-color);
+		}
+	}
+}
+
+
+#Controls{
+	position: absolute;
+	width: 100%;
+	top: initial;
+	overflow-x: hidden;
+	bottom: 0px;
+}
+
 #Toggle{
 	position:relative;
 	height: 1em;
@@ -106,15 +163,7 @@ ol{
 	width: 100%;
 	line-height: 1em;
 }
+
 .hidden{
 	display: none;
-}
-#Controls{
-	position: absolute;
-	min-height: 1em;
-	width: 100%;
-	bottom: 0px;
-	box-shadow: 0px 12px 4px 12px black;
-	overflow-x: hidden;
-	padding-left: 5px;
 }

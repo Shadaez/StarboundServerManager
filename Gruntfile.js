@@ -45,7 +45,7 @@ module.exports = function(grunt) {
         tasks: ['sass']
       },
       js: {
-        files: "src/*.js",
+        files: "src/application.js",
         tasks: ['jshint', 'uglify']
       }
     }
@@ -56,8 +56,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
-
-  grunt.registerTask('watch', ['watch']);
 
   grunt.registerTask('dev', ['sass', 'jshint']);
 

@@ -7,43 +7,47 @@
     <link rel='stylesheet' href='/styles.css' type='text/css'/>
   </head>
   <body ng-controller='StarboundCtrl'>
-    <section id='PlayerList' class='top left'>
-      <h4>Online Players</h4>
-      <ol>
-        <li ng-repeat= 'user in users' title='ip: {{user.ip}}'>
-          {{user.name}}
-        </li>
-      </ol>
+    <section class='left'>
+      <section id='PlayerList' class='top'>
+        <h4>Online Players</h4>
+        <ol>
+          <li ng-repeat= 'user in users' title='ip: {{user.ip}}'>
+            {{user.name}}
+          </li>
+        </ol>
+      </section>
+      <section id='Systems' class='bottom'>
+        <h4>Active Systems</h4>
+        <ol>
+          <li ng-repeat= 'system in systems' title='Active worlds in system: {{system.count}}'>
+            {{system.name}}
+          </li>
+        </ol>
+      </section>
     </section>
-    <section id='Systems' class='bottom left'>
-      <h4>Active Systems</h4>
-      <ol>
-        <li ng-repeat= 'system in systems' title='Active worlds in system: {{system.count}}'>
-          {{system.name}}
-        </li>
-      </ol>
-    </section>
-    <header id='Header' class='top right'>
-      <h2> {{serverName}} </h2>
-      <h4> Server is <i id='Status' class='{{status}}'>{{status}}</i>.</h4>
-    </header>
-    <section id='Chat' class='bottom right'>
-      <ol>
-        <li ng-repeat='chat in chatLog'>
-          &lt;{{chat.user}}&gt; {{chat.message}}
-        </li>
-      </ol>
-    </section>
-    <section id='Controls' class='right'>
-      <div id='Toggle'>+</div>
-      <div class='hidden'>
-        <form type = 'text'>
-          <input type='password' name='rconPassword' ng-model='rconPassword'  size='30' placeholder='Enter RCon Password'>
-          <button type='button' name='start'>Start</button>
-          <button type='button' name='stop'>Stop</button>
-          <button type='button' name='restart'>Restart</button>
-        </form>
-      </div>
+    <section class='right'>
+      <header id='Header' class='top'>
+        <h2> {{serverName}} </h2>
+        <h4 id='Status'> Server is <i class='{{status}}'>{{status}}</i>.</h4>
+      </header>
+      <section id='Chat' class='bottom'>
+        <ol>
+          <li ng-repeat='chat in chatLog'>
+            &lt;{{chat.user}}&gt; {{chat.message}}
+          </li>
+        </ol>
+      </section>
+      <section id='Controls'>
+        <div id='Toggle'>+</div>
+        <div class='hidden'>
+          <form type = 'text'>
+            <input type='password' name='rconPassword' ng-model='rconPassword'  size='30' placeholder='Enter RCon Password'>
+            <button type='button' name='start'>Start</button>
+            <button type='button' name='stop'>Stop</button>
+            <button type='button' name='restart'>Restart</button>
+          </form>
+        </div>
+      </section>
     </section>
   </body>
 </html>

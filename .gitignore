@@ -4,3 +4,4 @@ bower_components/
 public/*.js
 *.min.js
 *.css
+styles_old.scss
