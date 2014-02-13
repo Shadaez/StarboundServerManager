@@ -31,7 +31,6 @@ $world-height: 215px;
 %whitespace{
 	margin: 0;
 	padding-left: 5px;
-	width: 100%;
 }
 
 %absolute{
@@ -40,7 +39,8 @@ $world-height: 215px;
 	overflow: hidden;
 	top: 0;
 	bottom: 0;
-	width: 100%;
+	left: 0;
+	right: 0;
 }
 
 html, body{
@@ -149,18 +149,15 @@ h4, h2{
 
 
 #Controls{
-	position: absolute;
-	width: 100%;
+	@extend %absolute;
 	top: initial;
 	overflow-x: hidden;
-	bottom: 0px;
 }
 
 #Toggle{
 	position:relative;
 	height: 1em;
 	top: 0px;
-	width: 100%;
 	line-height: 1em;
 }
 
