@@ -3,11 +3,11 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     sass: {
-        dist: {
-            files: {
-                'public/styles.css' : 'src/styles.scss'
-            }
+      dist: {
+        files: {
+          'public/css/styles.css': 'src/styles.scss'
         }
+      }
     },
     uglify: {
       options: {
@@ -16,16 +16,30 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'src/application.min.js' : ['src/application.js']
+          'public/js/application.min.js': ['src/application.js']
         }
       }
     },
-    concat: {
-        dist: {
-            files: {
-                'public/application.min.js' : ['bower_components/jquery/jquery.min.js', 'bower_components/angular/angular.min.js', 'src/application.min.js'] 
-            }
-        }
+    copy: {
+      dist: {
+        files: [{
+          cwd: 'bower_components/bootstrap/dist/',
+          expand: true,
+          src: ['**'],
+          dest: 'public/'
+        }, {
+          expand: true,
+          cwd: 'bower_components/angular/',
+          src: ['**.min.js', '**.map'],
+          dest: 'public/js'
+        },
+        {
+          expand: true,
+          cwd: 'bower_components/jquery/dist/',
+          src: ['**.min.js', '**.map'],
+          dest: 'public/js'
+        }]
+      }
     },
     jshint: {
       files: ['Gruntfile.js', 'src/application.js'],
@@ -52,12 +66,12 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   grunt.registerTask('dev', ['sass', 'jshint']);
 
-  grunt.registerTask('default', ['jshint', 'uglify', 'concat' , 'sass']);
+  grunt.registerTask('default', ['jshint', 'uglify', 'sass', 'copy']);
 };

@@ -1,5 +1,5 @@
 var socket = io.connect((window.location.hostname == 'localhost')? '127.0.0.1:' + window.location.port : window.location.host),
-	liHeight = 16;
+	liHeight = 20;
 
 function StarboundCtrl($scope) {
 	$scope.chatLog = [];
@@ -10,7 +10,7 @@ function StarboundCtrl($scope) {
 	$scope.serverName = 'Starbound Server';
 	//watches for chat change, when it changes if you're at the bottom, move scroll down to emulate chat programs
 	$scope.$watchCollection('chatLog', function() {
-		var Chat = $('#Chat').find('ol')[0];
+		var Chat = $('#Chat')[0];
 		if(Chat.scrollTop + Chat.clientHeight === Chat.scrollHeight){
 			setTimeout(function(){
 				Chat.scrollTop += Chat.clientHeight;
@@ -24,21 +24,30 @@ $(ready);
 
 function ready() {
 	var $Toggle = $('#Toggle'),
-		$hidden = $('.hidden'),
-		$Chat =  $('#Chat').find('ol')[0];
-	$Chat.scrollTop = $Chat.scrollHeight;
+		$controls = $('#Controls'),
+		Chat =  $('#Chat')[0];
+	liHeight = 20 || $($('list-group-item')[0]).height();
+	$(Chat).css({'max-height': liHeight*20-1 + 'px' });
+	Chat.scrollTop = Chat.scrollHeight;
 	$Toggle.click(function() {
-		$hidden.slideToggle();
+		$controls.slideToggle();
 		if ($Toggle.text() === '-') {
 			$Toggle.text('+');
 		} else {
 			$Toggle.text('-');
 		}
 	});
-	$('button').click(function() {
+	$('a').click(function() {
+		console.log($(this).attr('name'));
 		socket.emit('exec', {
 			type: $(this).attr('name'),
-			password: $(this).parent().find("input[name=rconPassword]").val()
+			password: $("input[name=rconPassword]").val()
+		}, function(auth){
+			if (auth){
+				bsAlert('success', "Success.");
+			} else {
+				bsAlert('danger', "Wrong password.");
+			}
 		});
 	});
 
@@ -98,4 +107,12 @@ function updateScope(data) {
 	angular.element('body').scope().$apply(function(scope) {
 		$.extend(scope, data);
 	});
+}
+
+function bsAlert(type, message){
+	var $alert = $('<div class="alert alert-' + type + '">'+ message +'</div>');
+	$('#Alerts').append($alert);
+	setTimeout(function(){
+		$alert.fadeOut(400, function(){$alert.remove();});
+	}, 1000);
 }

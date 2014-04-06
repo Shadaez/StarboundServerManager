@@ -72,7 +72,7 @@ beginListener();
 //socket.io
 io.sockets.on('connection', function(socket) {
 	socket.emit('data', global);
-	socket.on('exec', function(data) {
+	socket.on('exec', function(data, callback) {
 		if (authenticate(data.password)) {
 			if ((data.type === 'stop' || data.type === 'restart') && global.status !== 'down') {
 				io.sockets.emit('data', {
@@ -89,8 +89,9 @@ io.sockets.on('connection', function(socket) {
 				starbound_server = startServer();
 				beginListener();
 			}
+			callback(true);
 		} else {
-			io.sockets.emit('wrongPassword', true);
+			callback(false);
 		}
 	});
 });

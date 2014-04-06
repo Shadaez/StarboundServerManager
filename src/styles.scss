@@ -42,36 +42,30 @@ $world-height: 215px;
 	right: 0;
 }
 
-html, body{
-	margin:0;
-	padding:0;
-	font-family: $font-family;
-	font-size: small;
-	height:100%;
-	width:100%;
-	overflow: hidden;
+body{
+	background-image: url('../images/bg.png');
+	padding-top: 70px;
 }
 
-#Chat ol{
-	top: initial;
+.list-group-item, .panel-footer, .panel-heading, .panel{
+	padding-top: 0;
+	padding-bottom: 0;
 }
 
-ol{
-	@extend %whitespace;
-	@extend %absolute;
-	padding-left: 0;
-    list-style-type: none;
-	bottom: 0px;
-	top: 2em;
+#Chat{
 	overflow-y: auto;
-	max-height: 100%;
-	li{
-		@extend %whitespace;
-		background-color: $tertiary-color;
-		&:nth-child(odd){
-			background-color: $quaternary-color;
-		}
-	}
+}
+
+#Controls{
+	display: none;
+}
+
+#Alerts{
+	position: fixed;
+	top: 75px;
+	left: 0;
+	right: 0;
+	z-index: 100;
 }
 
 #Status{
@@ -87,80 +81,4 @@ ol{
 	.unknown{
 		color: grey;
 	}
-}
-
-h4, h2{
-	@extend %whitespace;
-	height: 2em;
-}
-
-.right{
-	@extend %absolute;
-	left: $side-width;
-	right: 0;
-	background-color: $primary-color;
-	.top{
-		@extend %absolute;
-		height: $header-height;
-		&:after{
-			@extend %after;
-			@include box-shadow(inset, $shadow-offset, 0, $shadow-size, (-$shadow-offset), $shadow-color);
-		}
-	}
-	.bottom{
-		@extend %absolute;
-		top: $header-height;
-		bottom: 1em;
-	}
-	#Controls{
-		@extend %whitespace;
-		background-color: $primary-color;
-	}
-	.bottom, #Controls{
-		&:after{
-			@extend %after;
-			@include box-shadow(inset, $shadow-offset, $shadow-offset, $shadow-size, (-$shadow-offset), $shadow-color);
-		}
-	}
-}
-.left{
-	@extend %absolute;
-	width: $side-width;
-	z-index: 10;
-	background-color: $secondary-color;
-	.top{
-		@extend %absolute;
-		bottom: $world-height;
-		&:after{
-			@extend %after;
-		}
-	}
-	.bottom{
-		@extend %absolute;
-		height: $world-height;
-		top:initial;
-		bottom: 0px;
-		&:after{
-			@extend %after;
-			@include box-shadow(inset, 0, $shadow-offset, $shadow-size, (-$shadow-offset), $shadow-color);
-		}
-	}
-}
-
-
-#Controls{
-	@extend %absolute;
-	top: initial;
-	overflow-x: hidden;
-}
-
-#Toggle{
-	position:relative;
-	height: 1em;
-	top: 0px;
-	line-height: 1em;
-}
-
-.hidden{
-	display: none;
 }

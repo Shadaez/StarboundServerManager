@@ -3,51 +3,73 @@
   <head>
     <title>Starbound Server Manager</title>
     <script src='/socket.io/socket.io.js'></script>
-    <script src='/application.min.js'></script>
-    <link rel='stylesheet' href='/styles.css' type='text/css'/>
+    <script src='/js/jquery.min.js'></script>
+    <script src='/js/bootstrap.min.js'></script>
+    <script src='/js/angular.min.js'></script>
+    <script src='/js/application.min.js'></script>
+    <link rel='stylesheet' href='/css/bootstrap.min.css' type='text/css'/>
+    <link rel='stylesheet' href='/css/styles.css' type='text/css'/>
   </head>
   <body ng-controller='StarboundCtrl'>
-    <section class='left'>
-      <section id='PlayerList' class='top'>
-        <h4>Online Players</h4>
-        <ol>
-          <li ng-repeat= 'user in users' title='ip: {{user.ip}}'>
-            {{user.name}}
-          </li>
-        </ol>
-      </section>
-      <section id='Systems' class='bottom'>
-        <h4>Active Systems</h4>
-        <ol>
-          <li ng-repeat= 'system in systems' title='Active worlds in system: {{system.count}}'>
-            {{system.name}}
-          </li>
-        </ol>
-      </section>
-    </section>
-    <section class='right'>
-      <header id='Header' class='top'>
-        <h2> {{serverName}} </h2>
-        <h4 id='Status'> Server is <i class='{{status}}'>{{status}}</i>.</h4>
-      </header>
-      <section id='Chat' class='bottom'>
-        <ol>
-          <li ng-repeat='chat in chatLog'>
-            &lt;{{chat.user}}&gt; {{chat.message}}
-          </li>
-        </ol>
-      </section>
-      <section id='Controls'>
-        <div id='Toggle'>+</div>
-        <div class='hidden'>
-          <form type = 'text'>
-            <input type='password' name='rconPassword' ng-model='rconPassword'  size='30' placeholder='Enter RCon Password'>
-            <button type='button' name='start'>Start</button>
-            <button type='button' name='stop'>Stop</button>
-            <button type='button' name='restart'>Restart</button>
-          </form>
+    <div id='Alerts'></div>
+    <div class='navbar-default navbar-fixed-top'>
+      <div class='container'>
+        <div class='navbar-brand' href="#">{{serverName}}</div>
+        <p id="Status" class="navbar-text navbar-right">Server is <b class='{{status}}'>{{status}}</b></p>
+      </div>
+    </div>
+    <div class='padding hidden-xs'></div>
+    <div class='container'>
+      <div class='padding hidden-xs'></div>
+      <div class='row'>
+        <div class = 'col-md-8 col-md-push-4'>
+          <div class='panel panel-default'>
+            <div class='panel-heading'> Chat </div>
+            <ol class='list-group' id='Chat'>
+              <li ng-repeat='chat in chatLog' class='list-group-item'>
+                &lt;{{chat.user}}&gt; {{chat.message}}
+              </li>
+            </ol> 
+            <div class='panel-footer'>
+              <div id='Toggle'>+</div>
+              <div id='Controls'>
+                <form type = 'text'>
+                  <div class='input-group'>
+                    <span class='input-group-addon'>Rcon Password</span>
+                    <input class='form-control' type='password' name='rconPassword' ng-model='rconPassword'  size='30'>
+                    <div class='input-group-btn'>
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Server Controls <span class="caret"></span></button>
+                      <ul class='dropdown-menu pull-right'> 
+                        <li class='start'><a name='start'>Start</a></li>
+                        <li class='stop'><a name='stop'>Stop</a></li>
+                        <li class='restart'><a name='restart'>Restart</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
-    </section>
+        <div class='col-md-4 col-md-pull-8'>
+          <div id='PlayerList' class='panel panel-default'>
+            <div class='panel-heading'>Online Players</div>
+            <ol class='list-group'>
+              <li ng-repeat= 'user in users' class='list-group-item' title='ip: {{user.ip}}'>
+                {{user.name}}
+              </li>
+            </ol>
+          </div>
+          <div id='Systems' class='panel panel-default'>
+            <div class='panel-heading'>Active Systems</div>
+            <ol class='list-group'>
+              <li ng-repeat= 'system in systems' title='Active worlds in system: {{system.count}}' class='list-group-item'>
+                {{system.name}}
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
