@@ -1,7 +1,10 @@
 *.log
 node_modules/
 bower_components/
-public/*.js
+public/js/
+public/css/
+public/fonts/
+public/
 *.min.js
 *.css
 styles_old.scss
