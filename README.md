@@ -7,11 +7,11 @@ Demonstration (may be outdated):
 
 server:
 
-![alt tag](http://i.imgur.com/v9Zzlng.gif)
+![alt tag](http://i.imgur.com/HHEVAuG.gif)
 
 website:
 
-![alt tag](http://i.imgur.com/x9C1pyL.gif)
+![alt tag](http://i.imgur.com/7NIPAQ6.gif)
 
 
 Getting Started
